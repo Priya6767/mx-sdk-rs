@@ -1,0 +1,151 @@
+{
+    "name": "drwa policy registry denial signal states",
+    "comment": "Models canonical policy states that should downstream-materialize as DRWA denial conditions",
+    "steps": [
+        {
+            "step": "setState",
+            "accounts": {
+                "address:owner": {
+                    "nonce": "0",
+                    "balance": "1,000,000"
+                },
+                "address:other": {
+                    "nonce": "0",
+                    "balance": "1,000,000"
+                }
+            },
+            "newAddresses": [
+                {
+                    "creatorAddress": "address:owner",
+                    "creatorNonce": "0",
+                    "newAddress": "sc:drwa_policy_registry"
+                }
+            ]
+        },
+        {
+            "step": "scDeploy",
+            "id": "deploy",
+            "tx": {
+                "from": "address:owner",
+                "contractCode": "mxsc:../output/drwa-policy-registry.mxsc.json",
+                "arguments": [],
+                "gasLimit": "50,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "out": [],
+                "status": "0",
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "id": "policy-allows-accredited-sg",
+            "comment": "Canonical state for allowed baseline",
+            "tx": {
+                "from": "address:owner",
+                "to": "sc:drwa_policy_registry",
+                "function": "setTokenPolicy",
+                "arguments": [
+                    "str:CARBON-ALLOW",
+                    "true",
+                    "false",
+                    "false",
+                    "false",
+                    "nested:str:ACCREDITED",
+                    "nested:str:SG"
+                ],
+                "gasLimit": "100,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "0",
+                "out": "*",
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "id": "policy-global-pause",
+            "comment": "Downstream expectation: DRWA_TOKEN_PAUSED",
+            "tx": {
+                "from": "address:owner",
+                "to": "sc:drwa_policy_registry",
+                "function": "setTokenPolicy",
+                "arguments": [
+                    "str:CARBON-PAUSE",
+                    "true",
+                    "true",
+                    "true",
+                    "true",
+                    "nested:str:ACCREDITED",
+                    "nested:str:SG"
+                ],
+                "gasLimit": "100,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "0",
+                "out": "*",
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "id": "policy-strict-auditor-metadata-lock",
+            "comment": "Downstream expectation: DRWA_AUDITOR_REQUIRED for metadata update paths",
+            "tx": {
+                "from": "address:owner",
+                "to": "sc:drwa_policy_registry",
+                "function": "setTokenPolicy",
+                "arguments": [
+                    "str:CARBON-META",
+                    "true",
+                    "false",
+                    "true",
+                    "true",
+                    "nested:str:ACCREDITED",
+                    "nested:str:SG"
+                ],
+                "gasLimit": "100,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "0",
+                "out": "*",
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "id": "policy-unauthorized",
+            "tx": {
+                "from": "address:other",
+                "to": "sc:drwa_policy_registry",
+                "function": "setTokenPolicy",
+                "arguments": [
+                    "str:CARBON-ALLOW",
+                    "false",
+                    "false",
+                    "false",
+                    "false",
+                    "nested:str:RETAIL",
+                    "nested:str:US"
+                ],
+                "gasLimit": "100,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "status": "4",
+                "message": "str:Endpoint can only be called by owner",
+                "out": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        }
+    ]
+}

@@ -33,6 +33,12 @@ members = [
 
   "contracts/modules",
 
+  "contracts/drwa/common",
+  "contracts/drwa/identity-registry",
+  "contracts/drwa/policy-registry",
+  "contracts/drwa/asset-manager",
+  "contracts/drwa/attestation",
+
   "contracts/core/price-aggregator",
   "contracts/core/price-aggregator/meta",
   "contracts/core/wegld-swap",

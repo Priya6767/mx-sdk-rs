@@ -1183,6 +1183,48 @@ dependencies = [
 ]
 
 [[package]]
+name = "drwa-asset-manager"
+version = "0.0.0"
+dependencies = [
+ "drwa-common",
+ "multiversx-sc",
+ "multiversx-sc-scenario",
+]
+
+[[package]]
+name = "drwa-attestation"
+version = "0.0.0"
+dependencies = [
+ "multiversx-sc",
+ "multiversx-sc-scenario",
+]
+
+[[package]]
+name = "drwa-common"
+version = "0.0.0"
+dependencies = [
+ "multiversx-sc",
+]
+
+[[package]]
+name = "drwa-identity-registry"
+version = "0.0.0"
+dependencies = [
+ "drwa-common",
+ "multiversx-sc",
+ "multiversx-sc-scenario",
+]
+
+[[package]]
+name = "drwa-policy-registry"
+version = "0.0.0"
+dependencies = [
+ "drwa-common",
+ "multiversx-sc",
+ "multiversx-sc-scenario",
+]
+
+[[package]]
 name = "dunce"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
